@@ -62,6 +62,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
   if (!is_initialized_) {
 
     // first measurement
+    /**
     cout << "EKF: " << endl;
     cout << "P: " << ekf_.P_ << endl;
     cout << "F: " << ekf_.F_ << endl;
@@ -69,6 +70,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     cout << "Rl: " << ekf_.R_laser_ << endl;
     cout << "Rr: " << ekf_.R_radar_ << endl;
     cout << "H: " << ekf_.H_laser_ << endl;
+    */
 
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
       /**
@@ -76,11 +78,11 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       */
       float rho_i = measurement_pack.raw_measurements_(0);
       float phi_i = measurement_pack.raw_measurements_(1);
-
+      float rho_dot_i = measurement_pack.raw_measurements_(2);
       // Make sure phi is  -pi < phi < pi
       phi_i = tools.normalizeAngle(phi_i);
 
-      ekf_.x_ << rho_i * cos(phi_i), rho_i * sin(phi_i), 0, 0;
+      ekf_.x_ << rho_i * cos(phi_i), rho_i * sin(phi_i), rho_dot_i * cos(phi_i), rho_dot_i * sin(phi_i);
       previous_timestamp_ = measurement_pack.timestamp_;
 
     }
@@ -95,9 +97,6 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 
     // done initializing, no need to predict or update
     is_initialized_ = true;
-
-    //define pi
-    const double pi = 2*acos(0.0);
 
     return;
   }

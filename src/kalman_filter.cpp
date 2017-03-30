@@ -55,8 +55,8 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   float c1 = sqrt((px*px)+(py*py));
 
   if(fabs(c1) < 0.0001){
-		std::cout << "Error - Division by Zero" << std::endl;
-    c1 += 0.1;
+		std::cout << "Possible Division by Zero, denominator set = to 0.0001" << std::endl;
+    c1 += 0.0001;
 	}
 
   float c2 = atan2(py, px);
